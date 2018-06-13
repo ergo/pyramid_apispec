@@ -27,11 +27,9 @@ setup(
     version=version,
     description='Pyramid plugin for openapi spec generation ',
     long_description=long_description,
+    license='BSD',
     long_description_content_type='text/markdown',
-    url='https://github.com/ergo/pyramid_apispec',  # Optional
-
-    # This should be your name or the name of the organization which owns the
-    # project.
+    url='https://github.com/ergo/pyramid_apispec',
     author='Marcin Lulek',
     author_email='marcin@webreactor.eu',
     classifiers=[  # Optional
@@ -50,6 +48,10 @@ setup(
     ],
     keywords='pyramid apispec marshmallow rest restful',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    package_data={
+        'pyramid_apispec': ['static/*.*'],
+        '': ['LICENSE'],
+    },
     install_requires=['apispec'],
     setup_requires=["pytest-runner"],
     extras_require={
