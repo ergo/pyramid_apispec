@@ -53,6 +53,22 @@ Rendering the spec as JSON response:
             spec, 'bar_route', request=request, request_method='post')
         return spec.to_dict()
 
+# Adding api explorer view
+
+To compliment the spec generation this package can also provide explorer
+for your application API via Swagger UI project:
+
+    config.include('pyramid_apispec.views')
+    config.pyramid_apispec_add_explorer(
+        spec_route_name='openapi_spec')
+
+By default you need to pass the route name of the view that serves the open api 
+spec in your application, if needed you can specify pyramid `permission` or 
+custom callable (`script_generator` argument) to override default javascript 
+config of Swagger UI.
+
+The default url for the explorer is `/api-explorer`, this setting is controlled
+via `explorer_route_path` argument, 
 
 # Running tests
 

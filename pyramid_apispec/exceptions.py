@@ -1,0 +1,2 @@
+class PyramidApiSpecException(Exception):
+    pass
