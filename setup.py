@@ -56,6 +56,7 @@ setup(
     setup_requires=["pytest-runner"],
     extras_require={
         'dev': ['coverage', 'pytest', 'pyramid', 'tox'],
+        'demo': ['marshmallow==2.15.3', 'pyramid', 'apispec'],
         'lint': ['black'],
     }
 )
