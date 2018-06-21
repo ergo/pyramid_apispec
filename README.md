@@ -20,6 +20,9 @@ Check out the demo folder and minimal application example by running:
     pip install -e[demo]
     python demo/app.py
     
+You can then visit API explorer page at http://0.0.0.0:6543/api-explorer.
+
+Examples:
 
 Hinting a route and its view:
 
