@@ -1,15 +1,25 @@
 # pyramid_apispec
 
-ApiSpec Pyramid plugin for API generation. This package contains helper
-code for quick documentation of pyramid REST API's with 
-openapi (swagger) specification.
+pyramid_apispec allows you to create an OpenAPI specification file and an online 
+OpenAPI explorer using the Swagger UI project for your Pyramid application 
+and its Marshmallow schemas. 
 
+* Pyramid - http://trypyramid.com
+* Marshmallow - http://marshmallow.readthedocs.io/en/latest/
+* ApiSpec - http://apispec.readthedocs.io/en/latest/
+* Swagger UI - https://swagger.io/tools/swagger-ui/
 
 # Installation
 
     pip install pyramid_apispec
 
 # Basic usage
+
+Check out the demo folder and minimal application example by running:
+
+    pip install -e[demo]
+    python demo/app.py
+    
 
 Hinting a route and its view:
 
@@ -20,12 +30,12 @@ Hinting a route and its view:
         ---
         x-extension: value
         get:
-            description: get a greeting
+            description: some description
             responses:
                 200:
-                    description: a pet to be returned
+                    description: response for 200 code
                     schema:
-                        $ref: #/definitions/SomeFooBody
+                        $ref: #/definitions/BarBodySchema
         """
         return 'hi'
 
