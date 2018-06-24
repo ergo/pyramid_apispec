@@ -1,1 +1,1 @@
-__version__ = {"major": 0, "minor": 1, "patch": 1}
+__version__ = {"major": 0, "minor": 1, "patch": 2}
