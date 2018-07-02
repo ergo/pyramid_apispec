@@ -104,35 +104,7 @@ def add_pyramid_paths(
         if not check_methods_matching(view, **kwargs):
             continue
 
-        final_operations = {}
-
-        # views can be class based
-        if view.get("attr"):
-            global_meta = load_operations_from_docstring(view["callable"].__doc__)
-            if global_meta:
-                final_operations.update(global_meta)
-            f_view = getattr(view["callable"], view["attr"])
-        # or just function callables
-        else:
-            f_view = view.get("callable")
-
-        if operations is None:
-            methods = view.get("request_methods")
-            view_operations = load_operations_from_docstring(f_view.__doc__)
-            if not view_operations:
-                view_operations = {}
-                if is_string(methods):
-                    methods = [methods]
-                if not methods:
-                    methods = ALL_METHODS[:]
-                operation = load_yaml_from_docstring(f_view.__doc__)
-                if operation:
-                    for method in methods:
-                        view_operations[method.lower()] = operation
-            final_operations.update(view_operations)
-        else:
-            final_operations = operations
-        spec.add_path(route["pattern"], operations=final_operations)
+        spec.add_path(route["pattern"], operations=get_operations(view, operations))
 
 
 def check_methods_matching(view, **kwargs):
@@ -151,3 +123,36 @@ def check_methods_matching(view, **kwargs):
             if not view.get(kw) == kwargs[kw]:
                 return False
     return True
+
+
+def get_operations(view, operations):
+    if operations is not None:
+        return operations
+
+    operations = {}
+
+    # views can be class based
+    if view.get("attr"):
+        global_meta = load_operations_from_docstring(view["callable"].__doc__)
+        if global_meta:
+            operations.update(global_meta)
+        f_view = getattr(view["callable"], view["attr"])
+    # or just function callables
+    else:
+        f_view = view.get("callable")
+
+    methods = view.get("request_methods")
+    view_operations = load_operations_from_docstring(f_view.__doc__)
+    if not view_operations:
+        view_operations = {}
+        if is_string(methods):
+            methods = [methods]
+        if not methods:
+            methods = ALL_METHODS[:]
+        operation = load_yaml_from_docstring(f_view.__doc__)
+        if operation:
+            for method in methods:
+                view_operations[method.lower()] = operation
+    operations.update(view_operations)
+
+    return operations
