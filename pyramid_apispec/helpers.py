@@ -48,6 +48,8 @@ from __future__ import absolute_import
 
 from apispec.utils import load_operations_from_docstring, load_yaml_from_docstring
 
+from pyramid.threadlocal import get_current_request
+
 # py 2/3 compat
 try:
     import basestring
@@ -86,8 +88,6 @@ def add_pyramid_paths(
     :return:
 
     """
-    from pyramid.threadlocal import get_current_request
-
     if request is None:
         request = get_current_request()
 
@@ -102,23 +102,7 @@ def add_pyramid_paths(
         # kwargs.setdefault('route_name', route_name)
 
     for view in views:
-        matches = True
-        for kw in kwargs.keys():
-            # request_methods can be either a list of strings or a string
-            # so lets normalize via sets
-            if kw == "request_methods":
-                if is_string(kwargs[kw]):
-                    kwargs[kw] = [kwargs[kw]]
-                methods = view.get(kw) or ALL_METHODS
-                if is_string(methods):
-                    methods = [methods]
-                if not set(kwargs[kw] or []).intersection(methods):
-                    matches = False
-            else:
-                if not view.get(kw) == kwargs[kw]:
-                    matches = False
-
-        if not matches:
+        if not check_methods_matching(view, **kwargs):
             continue
 
         final_operations = {}
@@ -150,3 +134,21 @@ def add_pyramid_paths(
         else:
             final_operations = operations
         spec.add_path(route["pattern"], operations=final_operations)
+
+
+def check_methods_matching(view, **kwargs):
+    for kw in kwargs.keys():
+        # request_methods can be either a list of strings or a string
+        # so lets normalize via sets
+        if kw == "request_methods":
+            if is_string(kwargs[kw]):
+                kwargs[kw] = [kwargs[kw]]
+            methods = view.get(kw) or ALL_METHODS
+            if is_string(methods):
+                methods = [methods]
+            if not set(kwargs[kw] or []).intersection(methods):
+                return False
+        else:
+            if not view.get(kw) == kwargs[kw]:
+                return False
+    return True
