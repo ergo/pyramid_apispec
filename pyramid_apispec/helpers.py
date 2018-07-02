@@ -99,7 +99,6 @@ def add_pyramid_paths(
     # needs to be rewritten to internal name
     if request_method:
         kwargs["request_methods"] = request_method
-        # kwargs.setdefault('route_name', route_name)
 
     for view in views:
         matches = True
