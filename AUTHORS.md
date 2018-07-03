@@ -35,3 +35,5 @@ Current or previous core committers:
 * Marcin Lulek (Ergo) 2000-01-01
 
 Contributors:
+
+* Piotr Skamruk (jellonek) 2018-08-08
