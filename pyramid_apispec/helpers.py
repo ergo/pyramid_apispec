@@ -67,7 +67,13 @@ ALL_METHODS = ("get", "post", "put", "patch", "delete", "head", "options")
 
 
 def add_pyramid_paths(
-    spec, route_name, request=None, request_method=None, operations=None, **kwargs
+    spec,
+    route_name,
+    request=None,
+    request_method=None,
+    operations=None,
+    autodoc=True,
+    **kwargs
 ):
     """
 
@@ -83,6 +89,8 @@ def add_pyramid_paths(
         Request method predicate
     :param operations:
         Operations dict that will be used instead of introspection
+    :param autodoc:
+        Include information about endpoints without markdown docstring
     :param kwargs:
         Additional kwargs for predicate matching
     :return:
@@ -104,7 +112,10 @@ def add_pyramid_paths(
         if not check_methods_matching(view, **kwargs):
             continue
 
-        spec.add_path(route["pattern"], operations=get_operations(view, operations))
+        spec.add_path(
+            route["pattern"],
+            operations=get_operations(view, operations, autodoc=autodoc),
+        )
 
 
 def check_methods_matching(view, **kwargs):
@@ -125,7 +136,7 @@ def check_methods_matching(view, **kwargs):
     return True
 
 
-def get_operations(view, operations):
+def get_operations(view, operations, autodoc=True):
     if operations is not None:
         return operations
 
@@ -153,6 +164,9 @@ def get_operations(view, operations):
         if operation:
             for method in methods:
                 view_operations[method.lower()] = operation
+        elif autodoc:
+            for method in methods:
+                view_operations.setdefault(method.lower(), {"responses": {}})
     operations.update(view_operations)
 
     return operations

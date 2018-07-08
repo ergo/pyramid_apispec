@@ -101,9 +101,59 @@ class TestViewHelpers(object):
             "responses": {200: {"description": "said hi"}},
         }
         assert spec._paths["/hi"]["get"] == expected
-        assert "post" not in spec._paths["/hi"]
+        assert "post" in spec._paths["/hi"]
         assert spec._paths["/hi"]["x-extension"] == "global metadata"
         assert "mixed" in spec._paths["/hi"]["put"]["description"]
+
+    def test_autodoc_on(self, spec):
+        def hi_request(request):
+            return Response("Hi")
+
+        with Configurator() as config:
+            config.add_route("hi", "/hi")
+            config.add_view(hi_request, route_name="hi")
+            config.make_wsgi_app()
+        with prepare(config.registry):
+            add_pyramid_paths(spec, "hi")
+        assert "/hi" in spec._paths
+        assert "get" in spec._paths["/hi"]
+        assert "head" in spec._paths["/hi"]
+        assert "post" in spec._paths["/hi"]
+        assert "put" in spec._paths["/hi"]
+        assert "patch" in spec._paths["/hi"]
+        assert "delete" in spec._paths["/hi"]
+        assert "options" in spec._paths["/hi"]
+        expected = {"responses": {}}
+        assert spec._paths["/hi"]["get"] == expected
+
+    def test_autodoc_on_method(self, spec):
+        def hi_request(request):
+            return Response("Hi")
+
+        with Configurator() as config:
+            config.add_route("hi", "/hi")
+            config.add_view(hi_request, route_name="hi", request_method="GET")
+            config.make_wsgi_app()
+        with prepare(config.registry):
+            add_pyramid_paths(spec, "hi")
+        assert "/hi" in spec._paths
+        assert "get" in spec._paths["/hi"]
+        assert list(spec._paths["/hi"].keys()) == ["get"]
+        expected = {"responses": {}}
+        assert spec._paths["/hi"]["get"] == expected
+
+    def test_autodoc_off_empty(self, spec):
+        def hi_request(request):
+            return Response("Hi")
+
+        with Configurator() as config:
+            config.add_route("hi", "/hi")
+            config.add_view(hi_request, route_name="hi")
+            config.make_wsgi_app()
+        with prepare(config.registry):
+            add_pyramid_paths(spec, "hi", autodoc=False)
+        assert "/hi" in spec._paths
+        assert not spec._paths["/hi"].keys()
 
     def test_path_with_multiple_methods(self, spec):
         def hi_request(request):
