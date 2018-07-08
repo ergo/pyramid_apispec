@@ -4,6 +4,7 @@ from pyramid.config import Configurator
 from pyramid.view import view_config, exception_view_config
 from pyramid_apispec.helpers import add_pyramid_paths
 from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
 
 import validation
 
@@ -104,9 +105,7 @@ def api_spec(request):
     """
     Serve the spec to explorer
     """
-    spec = APISpec(
-        title="Some API", version="1.0.0", plugins=["apispec.ext.marshmallow"]
-    )
+    spec = APISpec(title="Some API", version="1.0.0", plugins=[MarshmallowPlugin()])
     # using marshmallow plugin here
     spec.definition("FooBodySchema", schema=validation.FooBodySchema)
     spec.definition("BarBodySchema", schema=validation.BarBodySchema(many=True))
@@ -138,5 +137,5 @@ if __name__ == "__main__":
         config.scan(".")
         app = config.make_wsgi_app()
     server = make_server("0.0.0.0", 6543, app)
-    print("visit api explorer at http://0.0.0.0:6543/api-explorer")
+    print("visit api explorer at http://127.0.0.1:6543/api-explorer")
     server.serve_forever()
