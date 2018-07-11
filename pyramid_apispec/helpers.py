@@ -113,12 +113,11 @@ def add_pyramid_paths(
             continue
 
         pattern = route["pattern"]
-        if not pattern.startswith('/'):
-            pattern = '/%s' % pattern
+        if not pattern.startswith("/"):
+            pattern = "/%s" % pattern
 
         spec.add_path(
-            pattern,
-            operations=get_operations(view, operations, autodoc=autodoc),
+            pattern, operations=get_operations(view, operations, autodoc=autodoc)
         )
 
 
