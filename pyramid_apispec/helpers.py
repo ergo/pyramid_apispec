@@ -102,14 +102,14 @@ def add_pyramid_paths(
     registry = request.registry
     introspector = registry.introspector
     route = introspector.get("routes", route_name)
-    views = introspector.related(route)
+    introspectables = introspector.related(route)
 
     # needs to be rewritten to internal name
     if request_method:
         kwargs["request_methods"] = request_method
 
-    for view in views:
-        if not check_methods_matching(view, **kwargs):
+    for maybe_view in introspectables:
+        if not is_view(maybe_view) or not check_methods_matching(maybe_view, **kwargs):
             continue
 
         pattern = route["pattern"]
@@ -117,8 +117,12 @@ def add_pyramid_paths(
             pattern = "/%s" % pattern
 
         spec.add_path(
-            pattern, operations=get_operations(view, operations, autodoc=autodoc)
+            pattern, operations=get_operations(maybe_view, operations, autodoc=autodoc)
         )
+
+
+def is_view(introspectable):
+    return introspectable.category_name == "views"
 
 
 def check_methods_matching(view, **kwargs):
