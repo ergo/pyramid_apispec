@@ -20,6 +20,9 @@ You can then visit your API explorer page at http://0.0.0.0:6543/api-explorer.
 
 # Examples
 
+Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-pages) 
+(please note that actual REST API is not working in github pages)
+
 ## Hinting a route and its view:
 
     @view_config(route_name='foo_route', renderer='json')

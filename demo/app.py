@@ -126,7 +126,7 @@ def marshmallow_invalid_data(context, request):
     return context.messages
 
 
-if __name__ == "__main__":
+def build_wsgi_app():
     with Configurator() as config:
         config.add_route("users", "/users")
         config.add_route("bar_route", "/bar")
@@ -136,6 +136,11 @@ if __name__ == "__main__":
         config.pyramid_apispec_add_explorer(spec_route_name="openapi_spec")
         config.scan(".")
         app = config.make_wsgi_app()
+    return app
+
+
+if __name__ == "__main__":
+    app = build_wsgi_app()
     server = make_server("0.0.0.0", 6543, app)
     print("visit api explorer at http://127.0.0.1:6543/api-explorer")
     server.serve_forever()

@@ -1,0 +1,159 @@
+{
+    "info": {
+        "title": "Some API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/users": {
+            "x-extension": "value",
+            "post": {
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "tags": [
+                    "Legacy API"
+                ],
+                "summary": "Register user",
+                "description": "",
+                "operationId": "users_post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Foo bar",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FooBodySchema"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response for 200 code",
+                        "schema": {
+                            "$ref": "#/definitions/FooBodySchema"
+                        }
+                    }
+                }
+            }
+        },
+        "/bar": {
+            "get": {
+                "description": "some description",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "offset",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "The number of items to skip"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response for 200 code",
+                        "schema": {
+                            "$ref": "#/definitions/BarBodySchema"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Other API"
+                ],
+                "summary": "Send a list of bar's",
+                "description": "",
+                "operationId": "bar_post",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Bar body description",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BarBodySchema"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response for 200 code",
+                        "schema": {
+                            "$ref": "#/definitions/BarBodySchema"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [],
+    "swagger": "2.0",
+    "definitions": {
+        "FooBodySchema": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                },
+                "email": {
+                    "type": "string"
+                },
+                "some_id": {
+                    "type": "string",
+                    "default": "18e5c5e0a8e149c4a6d89f9deb0e24d7",
+                    "minLength": 1,
+                    "maxLength": 256
+                },
+                "some_state": {
+                    "type": "object",
+                    "default": {}
+                }
+            },
+            "required": [
+                "email",
+                "username"
+            ]
+        },
+        "BarBodySchema": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "a_field": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 512
+                    },
+                    "b_field": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 512
+                    }
+                },
+                "required": [
+                    "a_field",
+                    "b_field"
+                ]
+            }
+        }
+    },
+    "parameters": {}
+}
