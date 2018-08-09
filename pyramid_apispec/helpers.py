@@ -46,7 +46,7 @@ Inspecting a route and its view::
 """
 from __future__ import absolute_import
 
-from apispec.utils import load_operations_from_docstring, load_yaml_from_docstring
+from apispec.yaml_utils import load_operations_from_docstring, load_yaml_from_docstring
 
 from pyramid.threadlocal import get_current_request
 
