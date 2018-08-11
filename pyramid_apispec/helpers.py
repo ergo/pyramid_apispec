@@ -66,6 +66,20 @@ def is_string(val):
 ALL_METHODS = ("get", "post", "put", "patch", "delete", "head", "options")
 
 
+def clean_part(part):
+    # cleanup regex from route params
+    if part.startswith("{") and part.endswith("}") and ":" in part:
+        part = part.split(":")[0] + "}"
+    return part
+
+
+def reformat_pattern(pattern):
+    if not pattern.startswith("/"):
+        pattern = "/%s" % pattern
+    parts = pattern.split("/")
+    return "/".join([clean_part(p) for p in parts])
+
+
 def add_pyramid_paths(
     spec,
     route_name,
@@ -113,9 +127,7 @@ def add_pyramid_paths(
             continue
 
         pattern = route["pattern"]
-        if not pattern.startswith("/"):
-            pattern = "/%s" % pattern
-
+        pattern = reformat_pattern(pattern)
         spec.add_path(
             pattern, operations=get_operations(maybe_view, operations, autodoc=autodoc)
         )

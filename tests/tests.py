@@ -244,7 +244,6 @@ class TestViewHelpers(object):
         assert "/pet/{pet_id}" in spec._paths
 
     def test_api_prefix(self, spec):
-
         def api_routes(config):
             config.add_route("pet", "/pet/{pet_id}")
 
@@ -252,10 +251,23 @@ class TestViewHelpers(object):
             return "representation of pet {pet_id}".format(pet_id=pet_id)
 
         with Configurator() as config:
-            config.include(api_routes, route_prefix='/api/v1/')
+            config.include(api_routes, route_prefix="/api/v1/")
             config.add_view(get_pet, route_name="pet")
             config.make_wsgi_app()
 
         with prepare(config.registry):
             add_pyramid_paths(spec, "pet")
         assert "/api/v1/pet/{pet_id}" in spec._paths
+
+    def test_routes_with_regex(self, spec):
+        def get_pet(pet_id):
+            return ""
+
+        with Configurator() as config:
+            config.add_route("pet", "/pet/{pet_id:\d+}")
+            config.add_view(get_pet, route_name="pet")
+            config.make_wsgi_app()
+
+        with prepare(config.registry):
+            add_pyramid_paths(spec, "pet")
+        assert "/pet/{pet_id}" in spec._paths
