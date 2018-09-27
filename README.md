@@ -43,6 +43,7 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
 
 ## Rendering the spec as JSON response:
 
+    from apispec import APISpec
     from pyramid_apispec.helpers import add_pyramid_paths
 
     @view_config(route_name='openapi_spec', renderer='json')
