@@ -72,6 +72,7 @@ To complement the specification file generation, this package can also provide a
 for your application's API via the Swagger UI project:
 
     config.include('pyramid_apispec.views')
+    config.add_route("openapi_spec", "/openapi.json")
     config.pyramid_apispec_add_explorer(
         spec_route_name='openapi_spec')
 
