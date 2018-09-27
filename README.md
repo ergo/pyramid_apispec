@@ -44,6 +44,7 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
 ## Rendering the spec as JSON response:
 
     from apispec import APISpec
+    from apispec.ext.marshmallow import MarshmallowPlugin
     from pyramid_apispec.helpers import add_pyramid_paths
 
     @view_config(route_name='openapi_spec', renderer='json')
@@ -51,9 +52,7 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
         spec = APISpec(
             title='Some API',
             version='1.0.0',
-            plugins=[
-                'apispec.ext.marshmallow'
-            ],
+            plugins=[MarshmallowPlugin()],
         )
         # using marshmallow plugin here
         spec.definition('SomeFooBody', schema=MarshmallowSomeFooBodySchema)
