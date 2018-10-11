@@ -1,7 +1,8 @@
+# Makefile for local development
+
 SHELL := /bin/bash
 export PYTHONUNBUFFERED := 1
-export BASE := $(shell /bin/pwd)
-export PATH := $(shell echo $$PATH):$(BASE)/bin
+export PATH := $(shell echo $$PATH):./bin
 
 PYTHON := $(shell /usr/bin/which python{3.7,3.6})
 
@@ -11,17 +12,15 @@ endif
 ifneq (,$(findstring 3.6,$(PYTHON)))
     PY_VERSION := 3.6
 endif
+PY_TOX := py$(subst .,,$(PY_VERSION))
 
-VIRTUALENV := $(PYTHON) -m venv
-PIP := $(BASE)/.venv/bin/pip$(PY_VERSION)
+PIP := .tox/$(PY_TOX)/bin/pip$(PY_VERSION)
 
 .DEFAULT_GOAL := build
 
 
 $(PIP): var
-	$(VIRTUALENV) $(BASE)/.venv
-	@# as per `pyramid-cookiecutter-alchemy`
-	$(PIP) install --upgrade pip setuptools
+	tox -e $(PY_TOX)
 
 
 .PHONY: build
@@ -33,7 +32,7 @@ build: $(PIP) requirements.development.txt
 
 .PHONY: test
 test: $(PIP)
-	tox
+	TOXENV=$(PY_TOX) tox
 
 
 # only for initial build, without having a requirements file in place
@@ -47,7 +46,7 @@ build.setup: $(PIP)
 requirements.development.txt: build.setup
 	cat \
 		<($(PIP) freeze \
-			| grep -v pyramid_apispec \
+			| grep -v pyramid-apispec \
 			) \
 		<(echo '-e .[dev]') \
 		> requirements.development.txt
@@ -60,13 +59,12 @@ pip.freeze:
 
 
 var:
-	mkdir -p "$(BASE)/var"
+	mkdir -p ./var
 
 .PHONY: clean
 clean: pyc-clean
 	rm -rf \
-		"$(BASE)/.venv" \
-		"$(BASE)/.tox"
+		/.tox
 
 .PHONY: pyc-clean
 pyc-clean:
