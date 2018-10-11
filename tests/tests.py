@@ -15,6 +15,7 @@ def spec():
     return APISpec(
         title="Swagger Petstore",
         version="1.0.0",
+        openapi_version="2.0.0",
         description="This is a sample Petstore server.  You can find out more "
         'about Swagger at <a href="http://swagger.wordnik.com">'
         "http://swagger.wordnik.com</a> or on irc.freenode.net, #swagger."
