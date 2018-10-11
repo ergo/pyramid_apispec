@@ -21,7 +21,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 version = '{}.{}.{}'.format(__version__['major'],
                             __version__['minor'],
                             __version__['patch'])
-
+setup_requires = ["pytest-runner", ]
 setup(
     name='pyramid_apispec',
     version=version,
@@ -52,8 +52,8 @@ setup(
         'pyramid_apispec': ['static/*.*'],
         '': ['LICENSE'],
     },
-    install_requires=['apispec[yaml]>=1.0.0b1'],
-    setup_requires=["pytest-runner"],
+    install_requires=['apispec[yaml]>=1.0.0b1'] + setup_requires,
+    setup_requires=setup_requires,
     extras_require={
         'dev': ['coverage', 'pytest', 'pyramid', 'tox', 'webtest'],
         'demo': ['marshmallow==2.15.3', 'pyramid', 'apispec', 'webtest'],

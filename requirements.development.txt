@@ -13,6 +13,7 @@ pluggy==0.7.1
 py==1.6.0
 pyramid==1.9.2
 pytest==3.8.2
+pytest-runner==4.2
 PyYAML==3.13
 repoze.lru==0.7
 six==1.11.0
