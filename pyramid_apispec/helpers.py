@@ -134,7 +134,8 @@ def add_pyramid_paths(
 
 
 def is_view(introspectable):
-    return introspectable.category_name == "views"
+    return introspectable.category_name == "views" \
+           and introspectable.title != 'function cornice.pyramidhook._fallback_view'
 
 
 def check_methods_matching(view, **kwargs):

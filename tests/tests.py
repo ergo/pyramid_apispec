@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+from cornice import Service
 
 from pyramid.config import Configurator
 from pyramid.response import Response
@@ -272,3 +273,56 @@ class TestViewHelpers(object):
         with prepare(config.registry):
             add_pyramid_paths(spec, "pet")
         assert "/pet/{pet_id}" in spec._paths
+
+    def test_integration_cornice_route_docstring_introspection(self, spec):
+        """
+        When using Cornice services with Pyramid, things become different, as Cornice
+        provides some `_fallback_view`, which is not the callable and must be ignored
+        during `__doc__` parsing.
+        """
+
+        # Setup
+        # -----
+
+        # https://cornice.readthedocs.io/en/latest/services.html#imperatively
+        def demo_login(request):
+            """POST: A demo route to validate Cornice Apispec integration
+
+            ---
+            post:
+                description: post login data
+                responses:
+                  '200':
+                    description: response for 200 code
+                    content:
+                      application/json:
+                        schema:
+                          type: string
+            """
+            return Response("successful login")
+
+        demo_login_service = Service(name='demo_login',
+                                     path='/auth',
+                                     description='A demo route to validate Cornice Apispec integration')
+        demo_login_service.add_view("POST", demo_login)
+
+        with Configurator() as config:
+            config.include('cornice')
+            config.add_cornice_service(demo_login_service)
+            config.scan()
+            config.make_wsgi_app()
+
+        with prepare(config.registry):
+            add_pyramid_paths(spec, "demo_login")
+
+        # Validation
+        # ----------
+
+        assert len(spec._paths) > 0
+        post_op = spec._paths["/auth"]["post"]
+
+        # this is the crucial part: did we find some docblock at all?
+        assert 'description' in post_op
+        assert post_op["description"] == "post login data"
+        assert '200' in post_op['responses']
+        # ... more detailled processing is not required to be validated here.
