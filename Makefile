@@ -31,6 +31,10 @@ build: $(PIP) requirements.development.txt
 		--disable-pip-version-check \
 		install -r requirements.development.txt
 
+.PHONY: test
+test: $(PIP)
+	tox
+
 
 # only for initial build, without having a requirements file in place
 .PHONY: build.setup
@@ -61,7 +65,8 @@ var:
 .PHONY: clean
 clean: pyc-clean
 	rm -rf \
-		"$(BASE)/.venv"
+		"$(BASE)/.venv" \
+		"$(BASE)/.tox"
 
 .PHONY: pyc-clean
 pyc-clean:
