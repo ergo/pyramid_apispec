@@ -55,7 +55,7 @@ setup(
     install_requires=['apispec[yaml]>=1.0.0b1'] + setup_requires,
     setup_requires=setup_requires,
     extras_require={
-        'dev': ['coverage', 'pytest', 'pyramid', 'tox', 'webtest'],
+        'dev': ['coverage', 'pytest', 'pyramid', 'tox', 'webtest', 'cornice>=3.1.0', ],
         'demo': ['marshmallow==2.15.3', 'pyramid', 'apispec', 'webtest'],
         'lint': ['black'],
     }
