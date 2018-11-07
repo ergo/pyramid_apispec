@@ -127,7 +127,7 @@ def add_pyramid_paths(
 
         pattern = route["pattern"]
         pattern = reformat_pattern(pattern)
-        spec.add_path(
+        spec.path(
             pattern, operations=get_operations(maybe_view, operations, autodoc=autodoc)
         )
 
