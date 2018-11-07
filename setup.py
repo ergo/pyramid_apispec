@@ -11,8 +11,6 @@ from os import path
 # Always prefer setuptools over distutils
 from setuptools import find_packages, setup
 
-from pyramid_apispec import __version__
-
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
