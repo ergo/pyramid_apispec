@@ -106,10 +106,15 @@ def api_spec(request):
     """
     Serve the spec to explorer
     """
-    spec = APISpec(title="Some API", version="1.0.0", plugins=[MarshmallowPlugin()])
+    spec = APISpec(
+        title="Some API",
+        version="1.0.0",
+        openapi_version="2.0.0",
+        plugins=[MarshmallowPlugin()],
+    )
     # using marshmallow plugin here
-    spec.definition("FooBodySchema", schema=validation.FooBodySchema)
-    spec.definition("BarBodySchema", schema=validation.BarBodySchema(many=True))
+    spec.components.schema("FooBodySchema", schema=validation.FooBodySchema)
+    spec.components.schema("BarBodySchema", schema=validation.BarBodySchema(many=True))
 
     # inspect the `foo_route` and generate operations from docstring
     add_pyramid_paths(spec, "users", request=request)

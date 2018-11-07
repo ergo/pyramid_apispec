@@ -13,6 +13,7 @@ def spec():
     return APISpec(
         title="Swagger Petstore",
         version="1.0.0",
+        openapi_version="2.0",
         description="This is a sample Petstore server.  You can find out more "
         'about Swagger at <a href="http://swagger.wordnik.com">'
         "http://swagger.wordnik.com</a> or on irc.freenode.net, #swagger."
@@ -36,12 +37,20 @@ class TestViewHelpers(object):
                 spec,
                 "hi",
                 operations={
-                    "get": {"parameters": [], "responses": {"200": "..params.."}}
+                    "get": {
+                        "parameters": [],
+                        "responses": {
+                            "200": {"description": "Test description", "schema": "file"}
+                        },
+                    }
                 },
             )
         assert "/hi" in spec._paths
         assert "get" in spec._paths["/hi"]
-        expected = {"parameters": [], "responses": {"200": "..params.."}}
+        expected = {
+            "parameters": [],
+            "responses": {"200": {"description": "Test description", "schema": "file"}},
+        }
         assert spec._paths["/hi"]["get"] == expected
 
     def test_path_from_method_view(self, spec):
