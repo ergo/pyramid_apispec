@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import pytest
-
+from apispec import APISpec
 from pyramid.config import Configurator
 from pyramid.response import Response
 from pyramid.scripting import prepare
 
-
-from apispec import APISpec
 from pyramid_apispec.helpers import add_pyramid_paths
 
 

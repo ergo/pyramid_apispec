@@ -1,12 +1,13 @@
 import random
 from wsgiref.simple_server import make_server
-from pyramid.config import Configurator
-from pyramid.view import view_config, exception_view_config
-from pyramid_apispec.helpers import add_pyramid_paths
-from apispec import APISpec
-from apispec.ext.marshmallow import MarshmallowPlugin
 
 import validation
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
+from pyramid.config import Configurator
+from pyramid.view import exception_view_config, view_config
+
+from pyramid_apispec.helpers import add_pyramid_paths
 
 
 @view_config(route_name="users", renderer="json")

@@ -1,8 +1,8 @@
 import io
 import json
 
-from webtest import TestApp
 from app import build_wsgi_app
+from webtest import TestApp
 
 app = TestApp(build_wsgi_app())
 

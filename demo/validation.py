@@ -1,6 +1,7 @@
 import uuid
+
 import marshmallow
-from marshmallow import validate, fields
+from marshmallow import fields, validate
 
 
 def gen_uuid():

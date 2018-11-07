@@ -15,12 +15,12 @@ Check out the demo folder and minimal application example by running:
 
     pip install -e '.[demo]'
     python demo/app.py
-    
+
 You can then visit your API explorer page at http://0.0.0.0:6543/api-explorer.
 
 # Examples
 
-Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-pages) 
+Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-pages)
 (please note that actual REST API is not working in github pages)
 
 ## Hinting a route and its view:
@@ -75,8 +75,8 @@ for your application's API via the Swagger UI project:
     config.pyramid_apispec_add_explorer(
         spec_route_name='openapi_spec')
 
-By default you need to pass the route name of the view that serves the OpenAPI 
-specification in your application. If needed you can specify a Pyramid `permission` or 
+By default you need to pass the route name of the view that serves the OpenAPI
+specification in your application. If needed you can specify a Pyramid `permission` or
 custom callable (`script_generator` argument) to override the default JavaScript
 configuration of Swagger UI.
 

@@ -1,7 +1,9 @@
-from string import Template
-import pkg_resources
 import importlib
+from string import Template
+
+import pkg_resources
 from pyramid.response import Response
+
 from pyramid_apispec.exceptions import PyramidApiSpecException
 
 
