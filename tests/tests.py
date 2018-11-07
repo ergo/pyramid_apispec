@@ -5,6 +5,7 @@ from pyramid.config import Configurator
 from pyramid.response import Response
 from pyramid.scripting import prepare
 
+from pyramid_apispec import __version__
 from pyramid_apispec.helpers import add_pyramid_paths
 
 
@@ -21,6 +22,10 @@ def spec():
         "authorization filters",
         plugins=[],
     )
+
+
+def test_version():
+    assert "Version" in __version__.__class__.__name__
 
 
 class TestViewHelpers(object):

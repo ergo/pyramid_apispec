@@ -1,5 +1,10 @@
 # Changelog
 
+### 2018-10-08 0.3.0 release
+
+Backwards incompatible changes:
+* Depends on APISpec 1.0.0b5
+
 ### 2018-08-11 0.2.1 release
 
 Fixes:

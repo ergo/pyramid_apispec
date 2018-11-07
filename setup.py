@@ -19,13 +19,9 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
-version = "{}.{}.{}".format(
-    __version__["major"], __version__["minor"], __version__["patch"]
-)
-
 setup(
     name="pyramid_apispec",
-    version=version,
+    version="0.3.0",
     description="Pyramid plugin for openapi spec generation ",
     long_description=long_description,
     license="BSD",

@@ -1,1 +1,3 @@
-__version__ = {"major": 0, "minor": 2, "patch": 1}
+import pkg_resources
+
+__version__ = pkg_resources.get_distribution("pyramid_apispec").parsed_version
