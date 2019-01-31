@@ -28,7 +28,7 @@ setup(
     author="Marcin Lulek",
     author_email="marcin@webreactor.eu",
     classifiers=[  # Optional
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Framework :: Pyramid",
         "Topic :: Internet :: WWW/HTTP",
@@ -44,7 +44,7 @@ setup(
     keywords="pyramid apispec marshmallow rest restful",
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     package_data={"pyramid_apispec": ["static/*.*"], "": ["LICENSE"]},
-    install_requires=["apispec[yaml]>=1.0.0b5"],
+    install_requires=["apispec[yaml]>=1.0.0rc1"],
     setup_requires=["pytest-runner"],
     extras_require={
         "dev": ["coverage", "pytest", "pyramid", "tox", "webtest"],
