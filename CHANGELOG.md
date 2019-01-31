@@ -1,5 +1,15 @@
 # Changelog
 
+### 2019-01-31 0.3.1 release
+
+Backwards incompatible changes:
+* Depends on APISpec 1.0.0rc1
+
+Fixes:
+
+* Handle cornice views better
+
+
 ### 2018-10-08 0.3.0 release
 
 Backwards incompatible changes:

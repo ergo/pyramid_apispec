@@ -116,7 +116,7 @@ def add_pyramid_paths(
     introspector = registry.introspector
     route = introspector.get("routes", route_name)
     introspectables = introspector.related(route)
-
+    ignored_view_names = kwargs.pop("ignored_view_names", None)
     # needs to be rewritten to internal name
     if request_method:
         kwargs["request_methods"] = request_method
@@ -126,7 +126,7 @@ def add_pyramid_paths(
         if (
             not is_view(maybe_view)
             or not check_methods_matching(maybe_view, **kwargs)
-            or not should_ignore_view(maybe_view, **kwargs)
+            or should_ignore_view(maybe_view, ignored_views=ignored_view_names)
         ):
             continue
 
@@ -142,7 +142,10 @@ def is_view(introspectable):
 
 
 def should_ignore_view(introspectable, **kwargs):
-    to_ignore = ["cornice.pyramidhook._fallback_view"]
+    to_ignore = kwargs.get("ignored_view_names")
+    if to_ignore is None:
+        to_ignore = ["cornice.pyramidhook._fallback_view"]
+
     for name in to_ignore:
         if name in introspectable.title:
             return True
