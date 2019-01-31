@@ -122,7 +122,12 @@ def add_pyramid_paths(
         kwargs["request_methods"] = request_method
 
     for maybe_view in introspectables:
-        if not is_view(maybe_view) or not check_methods_matching(maybe_view, **kwargs):
+        # skip excluded views/non-views
+        if (
+            not is_view(maybe_view)
+            or not check_methods_matching(maybe_view, **kwargs)
+            or not should_ignore_view(maybe_view, **kwargs)
+        ):
             continue
 
         pattern = route["pattern"]
@@ -134,6 +139,14 @@ def add_pyramid_paths(
 
 def is_view(introspectable):
     return introspectable.category_name == "views"
+
+
+def should_ignore_view(introspectable, **kwargs):
+    to_ignore = ["cornice.pyramidhook._fallback_view"]
+    for name in to_ignore:
+        if name in introspectable.title:
+            return True
+    return False
 
 
 def check_methods_matching(view, **kwargs):
