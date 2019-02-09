@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 <!-- ### Removed -->
 <!-- ### Fixed -->
 
+## [0.3.2] - 2019-02-09
+### Changed
+* Depends on APISpec 1.0.0
+
 ## [0.3.1] - 2019-01-31
 ### Changed
 * [Possibly breaking] Depends on APISpec 1.0.0rc1
