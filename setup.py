@@ -19,7 +19,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="pyramid_apispec",
-    version="0.3.1",
+    version="0.3.2",
     description="Pyramid plugin for openapi spec generation ",
     long_description=long_description,
     license="BSD",
