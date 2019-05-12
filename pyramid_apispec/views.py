@@ -20,6 +20,8 @@ def build_api_explorer_view(
     spec_route_name=None,
     script_generator="pyramid_apispec.views:swagger_ui_script_template",
     permission=None,
+    route_args=None,
+    view_args=None,
     **kwargs
 ):
     """
@@ -31,11 +33,17 @@ def build_api_explorer_view(
     :param spec_route_name:
     :param script_generator:
     :param permission:
+    :param route_args:
+    :param view_args:
     :param kwargs:
     :return:
     """
-
-    config.add_route("pyramid_apispec.api_explorer_path", explorer_route_path)
+    route_args = route_args or {}
+    view_args = view_args or {}
+    view_args["permission"] = permission
+    config.add_route(
+        "pyramid_apispec.api_explorer_path", explorer_route_path, **route_args
+    )
     template = pkg_resources.resource_string(
         "pyramid_apispec", "static/index.html"
     ).decode("utf8")
@@ -58,8 +66,8 @@ def build_api_explorer_view(
 
     config.add_view(
         swagger_ui_template_view,
-        permission=permission,
         route_name="pyramid_apispec.api_explorer_path",
+        **view_args
     )
 
 

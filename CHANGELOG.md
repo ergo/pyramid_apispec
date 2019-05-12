@@ -13,6 +13,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 <!-- ### Removed -->
 <!-- ### Fixed -->
 
+## [0.3.3] - 2019-05-12
+### Added
+* `route_args` and `view_args` params to `build_api_explorer_view` for more fine grained control
+  of api-explorer view registration
+### Changed
+* [Possibly breaking] Depends on APISpec 1.3.3
+
 ## [0.3.2] - 2019-02-09
 ### Changed
 * Depends on APISpec 1.0.0

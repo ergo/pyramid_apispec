@@ -110,7 +110,7 @@ class TestViewHelpers(object):
 
         expected = {
             "description": "get a greeting",
-            "responses": {200: {"description": "said hi"}},
+            "responses": {"200": {"description": "said hi"}},
         }
         assert spec._paths["/hi"]["get"] == expected
         assert "post" in spec._paths["/hi"]
@@ -283,3 +283,25 @@ class TestViewHelpers(object):
         with prepare(config.registry):
             add_pyramid_paths(spec, "pet")
         assert "/pet/{pet_id}" in spec._paths
+
+
+class TestExplorer(object):
+    def test_registration(self):
+        with Configurator() as config:
+            config.add_route("openapi_spec", "/openapi.json")
+            config.include("pyramid_apispec.views")
+            config.pyramid_apispec_add_explorer(spec_route_name="openapi_spec")
+            app = config.make_wsgi_app()
+        introspector = app.registry.introspector
+        route_intr = introspector.get("routes", "pyramid_apispec.api_explorer_path")
+        assert route_intr.discriminator == "pyramid_apispec.api_explorer_path"
+
+    def test_registration_route_args(self):
+        with pytest.raises(ModuleNotFoundError):
+            with Configurator() as config:
+                config.add_route("openapi_spec", "/openapi.json")
+                config.include("pyramid_apispec.views")
+                config.pyramid_apispec_add_explorer(
+                    spec_route_name="openapi_spec",
+                    route_args={"factory": "non_existant_foo.bar.baz"},
+                )
