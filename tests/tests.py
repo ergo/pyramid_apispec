@@ -297,7 +297,7 @@ class TestExplorer(object):
         assert route_intr.discriminator == "pyramid_apispec.api_explorer_path"
 
     def test_registration_route_args(self):
-        with pytest.raises(ModuleNotFoundError):
+        with pytest.raises(ImportError):
             with Configurator() as config:
                 config.add_route("openapi_spec", "/openapi.json")
                 config.include("pyramid_apispec.views")
