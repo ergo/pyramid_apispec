@@ -8,6 +8,7 @@ from pyramid.scripting import prepare
 from pyramid_apispec import __version__
 from pyramid_apispec.helpers import add_pyramid_paths
 
+from webtest import TestApp as WebTestApp  # Avoid pytest warning
 
 @pytest.fixture()
 def spec():
@@ -305,3 +306,22 @@ class TestExplorer(object):
                     spec_route_name="openapi_spec",
                     route_args={"factory": "non_existant_foo.bar.baz"},
                 )
+
+    def test_explorer_with_path_arg(self, spec):
+        def spec_view(request):
+            return spec.to_dict()
+
+        with Configurator() as config:
+            config.add_route("openapi_spec", "/api/{version}/openapi.json")
+            config.add_view(spec_view, route_name="openapi_spec", renderer='json')
+
+            config.include("pyramid_apispec.views")
+            config.pyramid_apispec_add_explorer(
+                spec_route_name="openapi_spec",
+                explorer_route_path='/api/{version}/api-explorer'
+            )
+            app = config.make_wsgi_app()
+
+            testapp = WebTestApp(app)
+            testapp.get('/api/v1/openapi.json')
+            testapp.get('/api/v1/api-explorer')
