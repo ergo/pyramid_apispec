@@ -33,3 +33,4 @@ Current or previous core committers:
 Contributors:
 
 * Piotr Skamruk (jellonek) 2018-08-08
+* Daniel Debonzi (debonzi) 2019-10-21
