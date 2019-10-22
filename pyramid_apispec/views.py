@@ -84,5 +84,5 @@ def swagger_ui_script_template(request, spec_route_name, **kwargs):
         "pyramid_apispec", "static/index_script_template.html"
     ).decode("utf8")
     return Template(template).safe_substitute(
-        swagger_spec_url=request.route_url(spec_route_name)
+        swagger_spec_url=request.route_url(spec_route_name, **request.matchdict)
     )
