@@ -81,7 +81,7 @@ custom callable (`script_generator` argument) to override the default JavaScript
 configuration of Swagger UI.
 
 The default URL for the explorer is `/api-explorer`. This setting is controlled
-via the `explorer_route_path` argument - the route is registerd as `pyramid_apispec.api_explorer_path`.
+via the `explorer_route_path` argument - the route is registered as `pyramid_apispec.api_explorer_path`.
 
 # Running tests
 
