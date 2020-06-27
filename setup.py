@@ -19,7 +19,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="pyramid_apispec",
-    version="0.3.3",
+    version="0.4",
     description="Pyramid plugin for openapi spec generation ",
     long_description=long_description,
     license="BSD",
@@ -44,7 +44,7 @@ setup(
     keywords="pyramid apispec marshmallow rest restful",
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     package_data={"pyramid_apispec": ["static/*.*"], "": ["LICENSE"]},
-    install_requires=["apispec[yaml]==1.3.3"],
+    install_requires=["apispec[yaml]>=3.0.0"],
     setup_requires=["pytest-runner"],
     extras_require={
         "dev": ["coverage", "pytest", "pyramid", "tox", "webtest"],
