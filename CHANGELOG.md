@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * API Explorer does not work when there are arguments on path [(#PR13)](https://github.com/ergo/pyramid_apispec/pull/13)
 ### Changed
 * [Possibly breaking] Depends on APISpec >= 3.0.0
-
+* [Possibly breaking] Swagger UI version 3.35.2
 
 ## [0.3.3] - 2019-05-12
 ### Added
