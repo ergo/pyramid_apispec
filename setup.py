@@ -47,7 +47,7 @@ setup(
     install_requires=["apispec[yaml]>=3.0.0"],
     setup_requires=["pytest-runner"],
     extras_require={
-        "dev": ["coverage", "pytest", "pyramid", "tox", "webtest"],
+        "dev": ["coverage", "pytest", "pyramid", "tox", "webtest", "wheel", "twine"],
         "demo": ["marshmallow==3.8.0", "pyramid", "apispec", "webtest"],
         "lint": ["black"],
     },
