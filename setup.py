@@ -48,7 +48,7 @@ setup(
     setup_requires=["pytest-runner"],
     extras_require={
         "dev": ["coverage", "pytest", "pyramid", "tox", "webtest"],
-        "demo": ["marshmallow==2.15.3", "pyramid", "apispec", "webtest"],
+        "demo": ["marshmallow==3.8.0", "pyramid", "apispec", "webtest"],
         "lint": ["black"],
     },
 )
