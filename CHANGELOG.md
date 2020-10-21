@@ -13,6 +13,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 <!-- ### Removed -->
 <!-- ### Fixed -->
 
+## [0.4.0] - 2020-10-21
+### Fixed
+* API Explorer does not work when there are arguments on path [(#PR13)](https://github.com/ergo/pyramid_apispec/pull/13)
+### Changed
+* [Possibly breaking] Depends on APISpec >= 3.0.0
+
+
 ## [0.3.3] - 2019-05-12
 ### Added
 * `route_args` and `view_args` params to `build_api_explorer_view` for more fine grained control
