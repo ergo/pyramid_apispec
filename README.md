@@ -23,6 +23,11 @@ You can then visit your API explorer page at http://0.0.0.0:6543/api-explorer.
 Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-pages)
 (please note that actual REST API is not working in github pages)
 
+**Note:** This example is specific to OpenAPI/Swagger v2.x.
+OpenAPI 3.x.x is supported as well, it just uses a different YAML schema so pay attention to examples online
+(for example, the [apispec examples](https://apispec.readthedocs.io/en/latest/using_plugins.html#example-flask-and-marshmallow-plugins)
+use v3).
+
 ## Hinting a route and its view:
 
     @view_config(route_name='foo_route', renderer='json')
@@ -37,7 +42,7 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
                 200:
                     description: response for 200 code
                     schema:
-                        $ref: #/definitions/BarBodySchema
+                        $ref: "#/definitions/BarBodySchema"
         """
         return 'hi'
 
@@ -52,10 +57,11 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
         spec = APISpec(
             title='Some API',
             version='1.0.0',
+            openapi_version='2.0',
             plugins=[MarshmallowPlugin()],
         )
         # using marshmallow plugin here
-        spec.definition('SomeFooBody', schema=MarshmallowSomeFooBodySchema)
+        spec.components.schema('SomeFooBody', schema=MarshmallowSomeFooBodySchema)
 
         # inspect the `foo_route` and generate operations from docstring
         add_pyramid_paths(spec, 'foo_route', request=request)
