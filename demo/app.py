@@ -33,13 +33,11 @@ def users_post(request):
         name: "body"
         description: "Foo bar"
         required: true
-        schema:
-          $ref: "#/definitions/FooBodySchema"
+        schema: FooBodySchema
       responses:
           200:
               description: response for 200 code
-              schema:
-                $ref: "#/definitions/FooBodySchema"
+              schema: FooBodySchema
     """
     schema = validation.FooBodySchema()
     struct = schema.loads(request.body or "{}")
@@ -56,14 +54,12 @@ def bar_get(request):
         parameters:
           - in: query
             name: offset
-            schema:
-              type: integer
+            type: integer
             description: The number of items to skip
         responses:
             200:
                 description: response for 200 code
-                schema:
-                  $ref: "#/definitions/BarBodySchema"
+                schema: BarBodySchema
     """
     return {"a_field": random.random(), "b_field": random.randint(1, 999999)}
 
@@ -88,13 +84,11 @@ def bar_post(request):
         name: "body"
         description: "Bar body description"
         required: true
-        schema:
-          $ref: "#/definitions/BarBodySchema"
+        schema: BarBodySchema
       responses:
           200:
               description: response for 200 code
-              schema:
-                $ref: "#/definitions/BarBodySchema"
+              schema: BarBodySchema
     """
     schema = validation.BarBodySchema(many=True)
     struct = schema.loads(request.body or "{}")
@@ -109,12 +103,16 @@ def api_spec(request):
     spec = APISpec(
         title="Some API",
         version="1.0.0",
-        openapi_version="2.0.0",
+        openapi_version="2.0",
         plugins=[MarshmallowPlugin()],
     )
     # using marshmallow plugin here
     spec.components.schema("FooBodySchema", schema=validation.FooBodySchema)
     spec.components.schema("BarBodySchema", schema=validation.BarBodySchema(many=True))
+
+    # register API security scheme
+    api_auth_scheme = {"type": "apiKey", "in": "header", "name": "Authorization"}
+    spec.components.security_scheme("APIKeyHeader", api_auth_scheme)
 
     # inspect the `foo_route` and generate operations from docstring
     add_pyramid_paths(spec, "users", request=request)
