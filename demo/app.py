@@ -56,8 +56,7 @@ def bar_get(request):
         parameters:
           - in: query
             name: offset
-            schema:
-              type: integer
+            type: integer
             description: The number of items to skip
         responses:
             200:
@@ -109,12 +108,16 @@ def api_spec(request):
     spec = APISpec(
         title="Some API",
         version="1.0.0",
-        openapi_version="2.0.0",
+        openapi_version="2.0",
         plugins=[MarshmallowPlugin()],
     )
     # using marshmallow plugin here
     spec.components.schema("FooBodySchema", schema=validation.FooBodySchema)
     spec.components.schema("BarBodySchema", schema=validation.BarBodySchema(many=True))
+
+    # register API security scheme
+    api_auth_scheme = {"type": "apiKey", "in": "header", "name": "Authorization"}
+    spec.components.security_scheme("APIKeyHeader", api_auth_scheme)
 
     # inspect the `foo_route` and generate operations from docstring
     add_pyramid_paths(spec, "users", request=request)

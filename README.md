@@ -23,8 +23,14 @@ You can then visit your API explorer page at http://0.0.0.0:6543/api-explorer.
 Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-pages)
 (please note that actual REST API is not working in github pages)
 
+**Note:** This example is specific to OpenAPI/Swagger v2.x.
+OpenAPI 3.x.x is supported as well, it just uses a different YAML schema so pay attention to examples online
+(for example, the [apispec examples](https://apispec.readthedocs.io/en/latest/using_plugins.html#example-flask-and-marshmallow-plugins)
+use v3).
+
 ## Hinting a route and its view:
 
+```python
     @view_config(route_name='foo_route', renderer='json')
     def foo_view():
         """A greeting endpoint.
@@ -37,12 +43,14 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
                 200:
                     description: response for 200 code
                     schema:
-                        $ref: #/definitions/BarBodySchema
+                        $ref: "#/definitions/BarBodySchema"
         """
         return 'hi'
+```
 
 ## Rendering the spec as JSON response:
 
+```python
     from apispec import APISpec
     from apispec.ext.marshmallow import MarshmallowPlugin
     from pyramid_apispec.helpers import add_pyramid_paths
@@ -52,10 +60,11 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
         spec = APISpec(
             title='Some API',
             version='1.0.0',
+            openapi_version='2.0',
             plugins=[MarshmallowPlugin()],
         )
         # using marshmallow plugin here
-        spec.definition('SomeFooBody', schema=MarshmallowSomeFooBodySchema)
+        spec.components.schema('SomeFooBody', schema=MarshmallowSomeFooBodySchema)
 
         # inspect the `foo_route` and generate operations from docstring
         add_pyramid_paths(spec, 'foo_route', request=request)
@@ -64,16 +73,19 @@ Visit [generated documentation here](https://ergo.github.io/pyramid_apispec/gh-p
         add_pyramid_paths(
             spec, 'bar_route', request=request, request_method='post')
         return spec.to_dict()
+```
 
 # Adding the API explorer view
 
 To complement the specification file generation, this package can also provide an API explorer
 for your application's API via the Swagger UI project:
 
+```python
     config.include('pyramid_apispec.views')
     config.add_route("openapi_spec", "/openapi.json")
     config.pyramid_apispec_add_explorer(
         spec_route_name='openapi_spec')
+```
 
 By default you need to pass the route name of the view that serves the OpenAPI
 specification in your application. If needed you can specify a Pyramid `permission` or
