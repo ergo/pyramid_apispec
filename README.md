@@ -30,6 +30,7 @@ use v3).
 
 ## Hinting a route and its view:
 
+```python
     @view_config(route_name='foo_route', renderer='json')
     def foo_view():
         """A greeting endpoint.
@@ -45,9 +46,11 @@ use v3).
                         $ref: "#/definitions/BarBodySchema"
         """
         return 'hi'
+```
 
 ## Rendering the spec as JSON response:
 
+```python
     from apispec import APISpec
     from apispec.ext.marshmallow import MarshmallowPlugin
     from pyramid_apispec.helpers import add_pyramid_paths
@@ -70,16 +73,19 @@ use v3).
         add_pyramid_paths(
             spec, 'bar_route', request=request, request_method='post')
         return spec.to_dict()
+```
 
 # Adding the API explorer view
 
 To complement the specification file generation, this package can also provide an API explorer
 for your application's API via the Swagger UI project:
 
+```python
     config.include('pyramid_apispec.views')
     config.add_route("openapi_spec", "/openapi.json")
     config.pyramid_apispec_add_explorer(
         spec_route_name='openapi_spec')
+```
 
 By default you need to pass the route name of the view that serves the OpenAPI
 specification in your application. If needed you can specify a Pyramid `permission` or
