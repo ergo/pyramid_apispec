@@ -47,6 +47,7 @@ Inspecting a route and its view::
 from __future__ import absolute_import
 
 from apispec.yaml_utils import load_operations_from_docstring, load_yaml_from_docstring
+from pyramid.predicates import MatchParamPredicate
 from pyramid.threadlocal import get_current_request
 
 # py 2/3 compat
@@ -132,6 +133,12 @@ def add_pyramid_paths(
 
         pattern = route["pattern"]
         pattern = reformat_pattern(pattern)
+        if maybe_view.get("match_param"):
+            # replace route patterns that are specified in the view's match_param argument,
+            # so that route URLs are unique and accurate
+            match_params = MatchParamPredicate(maybe_view["match_param"], None)
+            for key, value in match_params.reqs:
+                pattern = pattern.replace("{%s}" % key, value)
         spec.path(
             pattern, operations=get_operations(maybe_view, operations, autodoc=autodoc)
         )

@@ -194,6 +194,43 @@ class TestViewHelpers(object):
         assert get_op["description"] == "get a greeting"
         assert post_op["description"] == "post a greeting"
 
+    def test_path_with_match_param(self, spec, config):
+        # this is not intended as an example of how to do i18n
+        def hello(request):
+            """Greet in English.
+
+            ---
+            description: English greeting
+            responses:
+                200:
+                    description: Success
+
+            """
+            return Response("Hello")
+
+        def hola(request):
+            """Greet in Spanish.
+
+            ---
+            description: Spanish greeting
+            responses:
+                200:
+                    description: Success
+
+            """
+            return Response("Hola")
+
+        config.add_route("greeting", "/greet/{language}")
+        config.add_view(hello, route_name="greeting", match_param="language=en")
+        config.add_view(hola, route_name="greeting", match_param="language=es")
+        config.make_wsgi_app()
+        add_pyramid_paths(spec, "greeting")
+
+        assert "/greet/en" in spec._paths
+        assert spec._paths["/greet/en"]["get"]["description"] == "English greeting"
+        assert "/greet/es" in spec._paths
+        assert spec._paths["/greet/es"]["get"]["description"] == "Spanish greeting"
+
     def test_integration_with_docstring_introspection(self, spec, config):
         def hello():
             """A greeting endpoint.
