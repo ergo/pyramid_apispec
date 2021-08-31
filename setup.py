@@ -44,11 +44,11 @@ setup(
     keywords="pyramid apispec marshmallow rest restful",
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     package_data={"pyramid_apispec": ["static/*.*"], "": ["LICENSE"]},
-    install_requires=["apispec[yaml]>=3.0.0"],
+    install_requires=["apispec[yaml]>=3.0.0", "pyramid"],
     setup_requires=["pytest-runner"],
     extras_require={
-        "dev": ["coverage", "pytest", "pyramid", "tox", "webtest", "wheel", "twine"],
-        "demo": ["marshmallow==3.8.0", "pyramid", "apispec", "webtest"],
+        "dev": ["coverage", "pytest", "tox", "webtest", "wheel", "twine"],
+        "demo": ["marshmallow==3.8.0", "apispec", "webtest"],
         "lint": ["black"],
     },
 )
