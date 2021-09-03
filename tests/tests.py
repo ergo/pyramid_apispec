@@ -3,12 +3,20 @@ import pytest
 from apispec import APISpec
 from pyramid.config import Configurator
 from pyramid.response import Response
-from pyramid.scripting import prepare
+from pyramid.testing import DummyRequest, testConfig
 
 from pyramid_apispec import __version__
 from pyramid_apispec.helpers import add_pyramid_paths
 
 from webtest import TestApp as WebTestApp  # Avoid pytest warning
+
+
+@pytest.fixture
+def config():
+    """Pyramid test `Configurator` harness."""
+    with testConfig(request=DummyRequest()) as config:
+        yield config
+
 
 @pytest.fixture()
 def spec():
@@ -30,36 +38,38 @@ def test_version():
 
 
 class TestViewHelpers(object):
-    def test_path_from_view(self, spec):
+    def test_path_from_view(self, spec, config):
         def hi_request(request):
             return Response("Hi")
 
-        with Configurator() as config:
-            config.add_route("hi", "/hi")
-            config.add_view(hi_request, route_name="hi")
-            config.make_wsgi_app()
-        with prepare(config.registry):
-            add_pyramid_paths(
-                spec,
-                "hi",
-                operations={
-                    "get": {
-                        "parameters": [],
-                        "responses": {
-                            "200": {"description": "Test description", "schema": "file"}
-                        },
-                    }
-                },
-            )
+        config.add_route("hi", "/hi")
+        config.add_view(hi_request, route_name="hi")
+        add_pyramid_paths(
+            spec,
+            "hi",
+            operations={
+                "get": {
+                    "parameters": [],
+                    "responses": {
+                        "200": {"description": "Test description", "schema": "file"}
+                    },
+                }
+            },
+        )
         assert "/hi" in spec._paths
         assert "get" in spec._paths["/hi"]
         expected = {
             "parameters": [],
-            "responses": {"200": {"description": "Test description", "schema": "file"}},
+            "responses": {
+                "200": {
+                    "description": "Test description",
+                    "schema": {"$ref": "#/definitions/file"},
+                }
+            },
         }
         assert spec._paths["/hi"]["get"] == expected
 
-    def test_path_from_method_view(self, spec):
+    def test_path_from_method_view(self, spec, config):
         # Class Based Views
         class HelloApi(object):
             """Greeting API.
@@ -90,24 +100,19 @@ class TestViewHelpers(object):
                 """
                 return "hi"
 
-        with Configurator() as config:
-            config.add_route("hi", "/hi")
-            # normally this would be added via @view_config decorator
-            config.add_view(HelloApi, attr="get", route_name="hi", request_method="get")
-            config.add_view(
-                HelloApi, attr="post", route_name="hi", request_method="post"
-            )
-            config.add_view(
-                HelloApi,
-                attr="mixed",
-                route_name="hi",
-                request_method=["put", "delete"],
-                xhr=True,
-            )
-            config.make_wsgi_app()
+        config.add_route("hi", "/hi")
+        # normally this would be added via @view_config decorator
+        config.add_view(HelloApi, attr="get", route_name="hi", request_method="get")
+        config.add_view(HelloApi, attr="post", route_name="hi", request_method="post")
+        config.add_view(
+            HelloApi,
+            attr="mixed",
+            route_name="hi",
+            request_method=["put", "delete"],
+            xhr=True,
+        )
 
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "hi")
+        add_pyramid_paths(spec, "hi")
 
         expected = {
             "description": "get a greeting",
@@ -118,16 +123,15 @@ class TestViewHelpers(object):
         assert spec._paths["/hi"]["x-extension"] == "global metadata"
         assert "mixed" in spec._paths["/hi"]["put"]["description"]
 
-    def test_autodoc_on(self, spec):
+    def test_autodoc_on(self, spec, config):
         def hi_request(request):
             return Response("Hi")
 
-        with Configurator() as config:
-            config.add_route("hi", "/hi")
-            config.add_view(hi_request, route_name="hi")
-            config.make_wsgi_app()
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "hi")
+        config.add_route("hi", "/hi")
+        config.add_view(hi_request, route_name="hi")
+        config.make_wsgi_app()
+        add_pyramid_paths(spec, "hi")
+
         assert "/hi" in spec._paths
         assert "get" in spec._paths["/hi"]
         assert "head" in spec._paths["/hi"]
@@ -139,66 +143,58 @@ class TestViewHelpers(object):
         expected = {"responses": {}}
         assert spec._paths["/hi"]["get"] == expected
 
-    def test_autodoc_on_method(self, spec):
+    def test_autodoc_on_method(self, spec, config):
         def hi_request(request):
             return Response("Hi")
 
-        with Configurator() as config:
-            config.add_route("hi", "/hi")
-            config.add_view(hi_request, route_name="hi", request_method="GET")
-            config.make_wsgi_app()
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "hi")
+        config.add_route("hi", "/hi")
+        config.add_view(hi_request, route_name="hi", request_method="GET")
+        add_pyramid_paths(spec, "hi")
+
         assert "/hi" in spec._paths
         assert "get" in spec._paths["/hi"]
         assert list(spec._paths["/hi"].keys()) == ["get"]
         expected = {"responses": {}}
         assert spec._paths["/hi"]["get"] == expected
 
-    def test_autodoc_off_empty(self, spec):
+    def test_autodoc_off_empty(self, spec, config):
         def hi_request(request):
             return Response("Hi")
 
-        with Configurator() as config:
-            config.add_route("hi", "/hi")
-            config.add_view(hi_request, route_name="hi")
-            config.make_wsgi_app()
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "hi", autodoc=False)
+        config.add_route("hi", "/hi")
+        config.add_view(hi_request, route_name="hi")
+        add_pyramid_paths(spec, "hi", autodoc=False)
+
         assert "/hi" in spec._paths
         assert not spec._paths["/hi"].keys()
 
-    def test_path_with_multiple_methods(self, spec):
+    def test_path_with_multiple_methods(self, spec, config):
         def hi_request(request):
             return Response("Hi")
 
-        with Configurator() as config:
-            config.add_route("hi", "/hi")
-            config.add_view(hi_request, route_name="hi", request_method=["get", "post"])
-            config.make_wsgi_app()
-
-        with prepare(config.registry):
-            add_pyramid_paths(
-                spec,
-                "hi",
-                operations=dict(
-                    get={
-                        "description": "get a greeting",
-                        "responses": {"200": "..params.."},
-                    },
-                    post={
-                        "description": "post a greeting",
-                        "responses": {"200": "..params.."},
-                    },
-                ),
-            )
+        config.add_route("hi", "/hi")
+        config.add_view(hi_request, route_name="hi", request_method=["get", "post"])
+        add_pyramid_paths(
+            spec,
+            "hi",
+            operations=dict(
+                get={
+                    "description": "get a greeting",
+                    "responses": {"200": "..params.."},
+                },
+                post={
+                    "description": "post a greeting",
+                    "responses": {"200": "..params.."},
+                },
+            ),
+        )
 
         get_op = spec._paths["/hi"]["get"]
         post_op = spec._paths["/hi"]["post"]
         assert get_op["description"] == "get a greeting"
         assert post_op["description"] == "post a greeting"
 
-    def test_integration_with_docstring_introspection(self, spec):
+    def test_integration_with_docstring_introspection(self, spec, config):
         def hello():
             """A greeting endpoint.
 
@@ -227,13 +223,10 @@ class TestViewHelpers(object):
             """
             return "hi"
 
-        with Configurator() as config:
-            config.add_route("hello", "/hello")
-            config.add_view(hello, route_name="hello")
-            config.make_wsgi_app()
+        config.add_route("hello", "/hello")
+        config.add_view(hello, route_name="hello")
 
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "hello")
+        add_pyramid_paths(spec, "hello")
 
         get_op = spec._paths["/hello"]["get"]
         post_op = spec._paths["/hello"]["post"]
@@ -243,46 +236,37 @@ class TestViewHelpers(object):
         assert "foo" not in spec._paths["/hello"]
         assert extension == "value"
 
-    def test_path_is_translated_to_swagger_template(self, spec):
+    def test_path_is_translated_to_swagger_template(self, spec, config):
         def get_pet(pet_id):
             return "representation of pet {pet_id}".format(pet_id=pet_id)
 
-        with Configurator() as config:
-            config.add_route("pet", "/pet/{pet_id}")
-            config.add_view(get_pet, route_name="pet")
-            config.make_wsgi_app()
+        config.add_route("pet", "/pet/{pet_id}")
+        config.add_view(get_pet, route_name="pet")
 
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "pet")
+        add_pyramid_paths(spec, "pet")
         assert "/pet/{pet_id}" in spec._paths
 
-    def test_api_prefix(self, spec):
+    def test_api_prefix(self, spec, config):
         def api_routes(config):
             config.add_route("pet", "/pet/{pet_id}")
 
         def get_pet(pet_id):
             return "representation of pet {pet_id}".format(pet_id=pet_id)
 
-        with Configurator() as config:
-            config.include(api_routes, route_prefix="/api/v1/")
-            config.add_view(get_pet, route_name="pet")
-            config.make_wsgi_app()
+        config.include(api_routes, route_prefix="/api/v1/")
+        config.add_view(get_pet, route_name="pet")
 
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "pet")
+        add_pyramid_paths(spec, "pet")
         assert "/api/v1/pet/{pet_id}" in spec._paths
 
-    def test_routes_with_regex(self, spec):
+    def test_routes_with_regex(self, spec, config):
         def get_pet(pet_id):
             return ""
 
-        with Configurator() as config:
-            config.add_route("pet", "/pet/{pet_id:\d+}")
-            config.add_view(get_pet, route_name="pet")
-            config.make_wsgi_app()
+        config.add_route("pet", r"/pet/{pet_id:\d+}")
+        config.add_view(get_pet, route_name="pet")
 
-        with prepare(config.registry):
-            add_pyramid_paths(spec, "pet")
+        add_pyramid_paths(spec, "pet")
         assert "/pet/{pet_id}" in spec._paths
 
 
@@ -313,15 +297,15 @@ class TestExplorer(object):
 
         with Configurator() as config:
             config.add_route("openapi_spec", "/api/{version}/openapi.json")
-            config.add_view(spec_view, route_name="openapi_spec", renderer='json')
+            config.add_view(spec_view, route_name="openapi_spec", renderer="json")
 
             config.include("pyramid_apispec.views")
             config.pyramid_apispec_add_explorer(
                 spec_route_name="openapi_spec",
-                explorer_route_path='/api/{version}/api-explorer'
+                explorer_route_path="/api/{version}/api-explorer",
             )
             app = config.make_wsgi_app()
 
             testapp = WebTestApp(app)
-            testapp.get('/api/v1/openapi.json')
-            testapp.get('/api/v1/api-explorer')
+            testapp.get("/api/v1/openapi.json")
+            testapp.get("/api/v1/api-explorer")

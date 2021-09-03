@@ -34,3 +34,4 @@ Contributors:
 
 * Piotr Skamruk (jellonek) 2018-08-08
 * Daniel Debonzi (debonzi) 2019-10-21
+* Scott Searcy (smsearcy) 2021-09-02
