@@ -12,7 +12,7 @@ from pyramid_apispec.helpers import add_pyramid_paths
 
 @view_config(route_name="users", renderer="json")
 def users_post(request):
-    """ Some comment.
+    """Some comment.
 
     ---
     x-extension: value
@@ -48,7 +48,7 @@ def users_post(request):
 
 @view_config(route_name="bar_route", request_method="GET", renderer="json")
 def bar_get(request):
-    """ Return something.
+    """Return something.
 
     ---
     get:
@@ -70,7 +70,7 @@ def bar_get(request):
 
 @view_config(route_name="bar_route", request_method="POST", renderer="json")
 def bar_post(request):
-    """ Return something.
+    """Return something.
 
     ---
     post:

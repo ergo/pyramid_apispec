@@ -1,25 +1,22 @@
-- repo: https://github.com/asottile/seed-isort-config
-  rev: v1.3.0
-  hooks:
-  - id: seed-isort-config
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v4.3.4
-  hooks:
-  - id: isort
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: end-of-file-fixer
+      - id: debug-statements
+      - id: requirements-txt-fixer
 
-- repo: https://github.com/ambv/black
-  rev: 18.9b0
-  hooks:
-  - id: black
-  python_version: python3.6
+  - repo: https://github.com/psf/black
+    rev: 21.8b0
+    hooks:
+      - id: black
+        language_version: python3.8
 
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.0.0
-  hooks:
-  - id: trailing-whitespace
-  - id: check-case-conflict
-  - id: check-merge-conflict
-  - id: check-symlinks
-  - id: end-of-file-fixer
-  - id: debug-statements
-  - id: requirements-txt-fixer
+  - repo: https://github.com/pycqa/isort
+    rev: 5.9.3
+    hooks:
+      - id: isort

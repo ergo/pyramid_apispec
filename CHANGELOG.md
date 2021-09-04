@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 <!-- ### Added -->
 <!-- ### Removed -->
 ### Fixed
-* Different views for the same route that use `match_param` predicates are 
+* Different views for the same route that use `match_param` predicates are
   documented as different endpoints [(#21)](https://github.com/ergo/pyramid_apispec/issues/21)
 
 ## [0.4.0] - 2020-10-21
