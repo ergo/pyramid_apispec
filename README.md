@@ -47,7 +47,7 @@ from pyramid.view import view_config
 class CategorySchema(Schema):
     id = fields.Int()
     name = fields.Str(required=True)
-    
+
 class PetSchema(Schema):
     categories = fields.List(fields.Nested(CategorySchema))
     name = fields.Str()
@@ -98,10 +98,10 @@ def api_spec(request):
     # Optional security scheme support
     api_key_scheme = {"type": "apiKey", "in": "header", "name": "X-API-Key"}
     spec.components.security_scheme("ApiKeyAuth", api_key_scheme)
-    
+
     # Optionally register Marshmallow schema for more flexibility
     spec.components.schema("Pet", schema=PetSchema)
-    
+
     # inspect the `random_pet` route and generate operations from docstring
     add_pyramid_paths(spec, 'random_pet', request=request)
 
