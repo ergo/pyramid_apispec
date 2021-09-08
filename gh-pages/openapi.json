@@ -23,12 +23,12 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "body",
-                        "description": "Foo bar",
                         "required": true,
+                        "name": "body",
                         "schema": {
                             "$ref": "#/definitions/FooBodySchema"
-                        }
+                        },
+                        "description": "Foo bar"
                     }
                 ],
                 "responses": {
@@ -48,9 +48,7 @@
                     {
                         "in": "query",
                         "name": "offset",
-                        "schema": {
-                            "type": "integer"
-                        },
+                        "type": "integer",
                         "description": "The number of items to skip"
                     }
                 ],
@@ -79,12 +77,12 @@
                 "parameters": [
                     {
                         "in": "body",
-                        "name": "body",
-                        "description": "Bar body description",
                         "required": true,
+                        "name": "body",
                         "schema": {
                             "$ref": "#/definitions/BarBodySchema"
-                        }
+                        },
+                        "description": "Bar body description"
                     }
                 ],
                 "responses": {
@@ -98,14 +96,11 @@
             }
         }
     },
-    "tags": [],
     "info": {
         "title": "Some API",
         "version": "1.0.0"
     },
-    "swagger": "2.0.0",
-    "parameters": {},
-    "responses": {},
+    "swagger": "2.0",
     "definitions": {
         "FooBodySchema": {
             "type": "object",
@@ -133,26 +128,30 @@
             ]
         },
         "BarBodySchema": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "a_field": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 512
-                    },
-                    "b_field": {
-                        "type": "string",
-                        "minLength": 1,
-                        "maxLength": 512
-                    }
+            "type": "object",
+            "properties": {
+                "a_field": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
                 },
-                "required": [
-                    "a_field",
-                    "b_field"
-                ]
-            }
+                "b_field": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                }
+            },
+            "required": [
+                "a_field",
+                "b_field"
+            ]
+        }
+    },
+    "securityDefinitions": {
+        "APIKeyHeader": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization"
         }
     }
 }
