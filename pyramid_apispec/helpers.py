@@ -17,8 +17,7 @@ Inspecting a route and its view::
             responses:
                 200:
                     description: a pet to be returned
-                    schema:
-                        $ref: #/definitions/SomeFooBody
+                    schema: SomeFooBody
         \"""
         return 'hi'
 
@@ -27,9 +26,8 @@ Inspecting a route and its view::
         spec = APISpec(
             title='Some API',
             version='1.0.0',
-            plugins=[
-                'apispec.ext.marshmallow'
-            ],
+            openapi_version='2.0',
+            plugins=[MarshmallowPlugin()],
         )
         # using marshmallow plugin here
         spec.definition('SomeFooBody', schema=MarshmallowSomeFooBodySchema)
