@@ -10,7 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## Unreleased
 <!-- ### Changed -->
 <!-- ### Added -->
-<!-- ### Removed -->
+### Removed
+* Dropped support for Python 2 and Python3 <= 3.5
 ### Fixed
 * Different views for the same route that use `match_param` predicates are
   documented as different endpoints [(#21)](https://github.com/ergo/pyramid_apispec/issues/21)

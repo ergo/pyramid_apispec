@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Pyramid helper. Includes a path helper that allows you to pass a route name
 for inspection. Inspects URL rules and view docstrings.
 
@@ -42,23 +41,13 @@ Inspecting a route and its view::
 
 
 """
-from __future__ import absolute_import
-
 from apispec.yaml_utils import load_operations_from_docstring, load_yaml_from_docstring
 from pyramid.predicates import MatchParamPredicate
 from pyramid.threadlocal import get_current_request
 
-# py 2/3 compat
-try:
-    import basestring
-
-    string_type = basestring
-except ImportError:
-    string_type = str
-
 
 def is_string(val):
-    return isinstance(val, string_type)
+    return isinstance(val, str)
 
 
 ALL_METHODS = ("get", "post", "put", "patch", "delete", "head", "options")
