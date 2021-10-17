@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 from apispec import APISpec
 from pyramid.config import Configurator
@@ -36,7 +35,7 @@ def test_version():
     assert "Version" in __version__.__class__.__name__
 
 
-class TestViewHelpers(object):
+class TestViewHelpers:
     def test_path_from_view(self, spec, config):
         def hi_request(request):
             return Response("Hi")
@@ -306,7 +305,7 @@ class TestViewHelpers(object):
         assert "/pet/{pet_id}" in spec._paths
 
 
-class TestExplorer(object):
+class TestExplorer:
     def test_registration(self):
         with Configurator() as config:
             config.add_route("openapi_spec", "/openapi.json")
