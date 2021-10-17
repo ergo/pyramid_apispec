@@ -57,7 +57,7 @@ def build_api_explorer_view(
             )
 
         script_callable = getattr(imported_package, callable)
-        version = kwargs.get("ui_version", "3.35.2")
+        version = kwargs.get("ui_version", "3.52.4")
         html = Template(template).safe_substitute(
             swagger_ui_script=script_callable(request, spec_route_name, **kwargs),
             version=version,
