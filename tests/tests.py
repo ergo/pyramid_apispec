@@ -229,6 +229,76 @@ class TestViewHelpers:
         assert "/greet/es" in spec._paths
         assert spec._paths["/greet/es"]["get"]["description"] == "Spanish greeting"
 
+    def test_ignored_view_names(self, spec, config):
+        
+        def get_answer(request):
+            """Return the Answer to the Ultimate Question of Life, the Universe, and Everything.
+
+            ---
+            description: Answer
+            responses:
+                200:
+                    description: Success
+
+            """
+            return Response("42")
+
+        def should_panic(request):
+            """Return if you have to panic.
+
+            ---
+            description: have to panic
+            responses:
+                200:
+                    description: Success
+
+            """
+            return Response("No")
+        
+        def get_towel_color(request):
+            """Return the color of your towel.
+
+            ---
+            description: Towel color
+            responses:
+                200:
+                    description: Success
+
+            """
+            return Response("Blue with yellow stripes")
+
+        config.add_route("give_the_answer", "/answer")
+        config.add_view(get_answer, route_name="give_the_answer", request_method=["get"])
+
+        config.add_route("ask_for_panic", "/panic")
+        config.add_view(should_panic, route_name="ask_for_panic", request_method=["get"])
+
+        config.add_route("towel_color", "/towel")
+        config.add_view(get_towel_color, route_name="towel_color", request_method=["get"])
+
+        config.make_wsgi_app()
+
+        # Normally this list of routes would be caught from the introspector
+        # set manually here just for the test
+        ROUTE_LIST = [
+            'give_the_answer',
+            'ask_for_panic',
+            'towel_color'
+        ]
+
+        IGNORED_VIEWS = [
+           'ask_for_panic',
+           'towel' # Should ignore even if partial name is passed
+        ]
+
+        for route_name in ROUTE_LIST:
+            add_pyramid_paths(spec, route_name, ignored_view_names=IGNORED_VIEWS)
+
+        assert "/answer" in spec._paths
+        assert "/panic" not in spec._paths
+        assert "/towel" not in spec._paths
+
+
     def test_integration_with_docstring_introspection(self, spec, config):
         def hello():
             """A greeting endpoint.
